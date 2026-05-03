@@ -1,0 +1,122 @@
+{
+    "@platforms" : [ "android", "iPhone", "iPad" ],
+    "id" : "H56E61F21",
+    "name" : "记忆卡",
+    "version" : {
+        "name" : "1.0.0",
+        "code" : "100"
+    },
+    "description" : "公务员考试词语记忆卡片应用，支持离线使用",
+    "icons" : {
+        "72" : "icons/icon-192.png",
+        "96" : "icons/icon-192.png",
+        "144" : "icons/icon-192.png",
+        "192" : "icons/icon-192.png",
+        "512" : "icons/icon-512.png"
+    },
+    "launch_path" : "index.html",
+    "developer" : {
+        "name" : "",
+        "email" : "",
+        "url" : ""
+    },
+    "permissions" : {
+        "Cache" : {
+            "description" : "管理应用缓存"
+        },
+        "Console" : {
+            "description" : "跟踪调试输出日志"
+        },
+        "File" : {
+            "description" : "访问本地文件系统"
+        },
+        "Storage" : {
+            "description" : "管理应用本地数据"
+        },
+        "XMLHttpRequest" : {
+            "description" : "跨域网络访问"
+        },
+        "Webview" : {
+            "description" : "窗口管理"
+        },
+        "NativeUI" : {
+            "description" : "原生UI控件"
+        },
+        "Navigator" : {
+            "description" : "浏览器信息"
+        },
+        "NativeObj" : {
+            "description" : "原生对象"
+        }
+    },
+    "plus" : {
+        "splashscreen" : {
+            "autoclose" : true,
+            "waiting" : true
+        },
+        "popGesture" : "close",
+        "runmode" : "normal",
+        "distribute" : {
+            "apple" : {
+                "appid" : "",
+                "mobileprovision" : "",
+                "password" : "",
+                "p12" : "",
+                "devices" : "universal",
+                "frameworks" : []
+            },
+            "google" : {
+                "packagename" : "com.gongkao.vocab",
+                "keystore" : "",
+                "password" : "",
+                "aliasname" : "",
+                "permissions" : [
+                    "<uses-permission android:name=\"android.permission.INTERNET\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\"/>"
+                ],
+                "abiFilters" : [ "arm64-v8a", "x86" ]
+            },
+            "orientation" : [ "portrait-primary" ],
+            "icons" : {
+                "ios" : {
+                    "prerendered" : true,
+                    "auto" : "icons/icon-512.png",
+                    "iphone" : {
+                        "retina7" : "icons/icon-192.png",
+                        "retina8" : "icons/icon-192.png",
+                        "spotlight-retina7" : "icons/icon-192.png",
+                        "settings-retina" : "icons/icon-192.png",
+                        "settings-retina8" : "icons/icon-192.png"
+                    },
+                    "ipad" : {
+                        "normal7" : "icons/icon-192.png",
+                        "retina7" : "icons/icon-512.png",
+                        "spotlight-normal7" : "icons/icon-192.png",
+                        "spotlight-retina7" : "icons/icon-192.png"
+                    }
+                },
+                "android" : {
+                    "mdpi" : "icons/icon-192.png",
+                    "ldpi" : "icons/icon-192.png",
+                    "hdpi" : "icons/icon-192.png",
+                    "xhdpi" : "icons/icon-192.png",
+                    "xxhdpi" : "icons/icon-512.png"
+                }
+            },
+            "splashscreen" : {
+                "ios" : {
+                    "iphone" : {},
+                    "ipad" : {}
+                },
+                "android" : {}
+            },
+            "ios" : {
+                "dSYMs" : false
+            }
+        }
+    },
+    "screenOrientation" : [ "portrait-primary" ]
+}

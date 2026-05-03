@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="公考词语记忆卡">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>公考词语记忆卡</title>
+    <!-- ✅ 修复1：用 link 加载 CSS，而非 script -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<!-- ✅ 修复3：body 用 flex 撑满屏幕 -->
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+    <!-- 安装按钮（PWA） -->
+    <button id="install-button"
+        class="fixed top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg z-50"
+        style="display: none;">
+        安装到桌面
+    </button>
+
+    <!-- ✅ 修复3：#app 占满剩余空间，底部留出导航高度 -->
+    <div id="app" class="flex-1 overflow-y-auto" style="padding-bottom: 72px;">
+
+        <!-- ══════════════ 首页 ══════════════ -->
+        <div id="home-page" class="page">
+            <header class="bg-blue-900 text-white p-4">
+                <h1 class="text-2xl font-bold text-center">公考词语记忆卡</h1>
+            </header>
+            <main class="p-4">
+                <div class="text-center mb-6">
+                    <h2 class="text-xl font-semibold mb-1">今日学习</h2>
+                    <p class="text-gray-500 text-sm" id="today-date">加载中…</p>
+                </div>
+
+                <!-- 今日任务 -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-blue-50 p-4 rounded-xl text-center shadow-sm">
+                        <p class="text-sm text-gray-500 mb-1">新词</p>
+                        <p class="text-3xl font-bold text-blue-800" id="new-words-count">0</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-xl text-center shadow-sm">
+                        <p class="text-sm text-gray-500 mb-1">待复习</p>
+                        <p class="text-3xl font-bold text-green-800" id="review-words-count">0</p>
+                    </div>
+                </div>
+
+                <!-- 进度环 -->
+                <div class="bg-white p-6 rounded-xl shadow-md mb-6">
+                    <h3 class="text-base font-semibold mb-4">学习进度</h3>
+                    <div class="flex justify-center mb-4">
+                        <div class="relative w-32 h-32">
+                            <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
+                                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none" stroke="#e5e7eb" stroke-width="3"/>
+                                <path id="progress-circle"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none" stroke="#3b82f6" stroke-width="3"
+                                    stroke-dasharray="0, 100" stroke-linecap="round"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-2xl font-bold text-blue-600" id="progress-percentage">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center text-sm">
+                        <div>
+                            <p class="text-gray-500">已掌握</p>
+                            <p class="font-bold text-green-600" id="mastered-count">0</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">学习中</p>
+                            <p class="font-bold text-blue-600" id="learning-count">0</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">未学习</p>
+                            <p class="font-bold text-gray-400" id="unlearned-count">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 统计小卡 -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl shadow-md">
+                        <h4 class="text-sm text-gray-500 mb-1">连续学习</h4>
+                        <p class="text-2xl font-bold text-blue-600" id="streak-days">0</p>
+                        <p class="text-xs text-gray-400">天，加油！</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-md">
+                        <h4 class="text-sm text-gray-500 mb-1">总词汇量</h4>
+                        <p class="text-2xl font-bold text-blue-600" id="total-words">0</p>
+                        <p class="text-xs text-gray-400">词</p>
+                    </div>
+                </div>
+
+                <!-- 开始按钮 -->
+                <button id="start-learning"
+                    class="w-full bg-blue-600 text-white py-4 rounded-xl text-lg font-semibold hover:bg-blue-700 active:bg-blue-800 transition-colors shadow-md">
+                    开始今日学习
+                </button>
+            </main>
+        </div>
+
+        <!-- ══════════════ 学习页面（核心） ══════════════ -->
+        <!-- ✅ 修复2：移回 #app 内部 -->
+        <div id="learning-page" class="page hidden">
+            <header class="bg-blue-900 text-white p-4 flex items-center">
+                <button id="back-from-learning" class="mr-3 text-xl">←</button>
+                <h1 class="text-xl font-bold flex-1 text-center pr-6">学习</h1>
+            </header>
+            <main class="p-4">
+                <!-- 进度条 -->
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm text-gray-500 mb-1">
+                        <span id="card-progress-text">0 / 0</span>
+                        <span id="session-mode-label">新词</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="session-progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div id="learning-container" class="max-w-md mx-auto">
+                    <!-- 卡片由 JS 动态生成 -->
+                </div>
+            </main>
+        </div>
+
+        <!-- ══════════════ 词库页面 ══════════════ -->
+        <div id="vocabulary-page" class="page hidden">
+            <header class="bg-blue-900 text-white p-4">
+                <h1 class="text-2xl font-bold text-center">词库</h1>
+            </header>
+            <main class="p-4">
+                <input type="text" id="vocab-search" placeholder="搜索词语…"
+                    class="w-full p-3 border border-gray-300 rounded-xl mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <div class="flex gap-2 mb-4 overflow-x-auto pb-1">
+                    <button class="vocab-filter-btn px-3 py-1 bg-blue-600 text-white rounded-full text-sm whitespace-nowrap" data-filter="all">全部</button>
+                    <button class="vocab-filter-btn px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm whitespace-nowrap" data-filter="unlearned">未学习</button>
+                    <button class="vocab-filter-btn px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm whitespace-nowrap" data-filter="learning">学习中</button>
+                    <button class="vocab-filter-btn px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm whitespace-nowrap" data-filter="mastered">已掌握</button>
+                </div>
+                <div class="bg-white rounded-xl shadow-md divide-y" id="vocabulary-list">
+                    <!-- 动态生成 -->
+                </div>
+            </main>
+        </div>
+
+        <!-- ══════════════ 统计页面 ══════════════ -->
+        <div id="stats-page" class="page hidden">
+            <header class="bg-blue-900 text-white p-4">
+                <h1 class="text-2xl font-bold text-center">统计</h1>
+            </header>
+            <main class="p-4">
+                <!-- 总进度 -->
+                <div class="bg-white p-4 rounded-xl shadow-md mb-4">
+                    <h3 class="text-base font-semibold mb-4">总学习进度</h3>
+                    <div class="flex justify-center mb-4">
+                        <div class="relative w-32 h-32">
+                            <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
+                                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none" stroke="#e5e7eb" stroke-width="3"/>
+                                <path id="stats-progress-circle"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none" stroke="#3b82f6" stroke-width="3"
+                                    stroke-dasharray="0, 100" stroke-linecap="round"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-2xl font-bold text-blue-600" id="stats-progress-pct">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center text-sm">
+                        <div>
+                            <p class="text-gray-500">已掌握</p>
+                            <p class="font-bold text-green-600" id="stats-mastered">0</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">学习中</p>
+                            <p class="font-bold text-blue-600" id="stats-learning">0</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">未学习</p>
+                            <p class="font-bold text-gray-400" id="stats-unlearned">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最近7天 -->
+                <div class="bg-white p-4 rounded-xl shadow-md mb-4">
+                    <h3 class="text-base font-semibold mb-3">最近7天学习量</h3>
+                    <div class="h-40 bg-gray-50 rounded-lg p-2">
+                        <svg id="weekly-chart" class="w-full h-full" viewBox="0 0 280 120" preserveAspectRatio="xMidYMid meet">
+                            <!-- 由 JS 动态绘制 -->
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- 分组完成度 -->
+                <div class="bg-white p-4 rounded-xl shadow-md mb-4">
+                    <h3 class="text-base font-semibold mb-3">分组完成度</h3>
+                    <div id="group-progress-list" class="space-y-3">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+
+                <!-- 学习记录 -->
+                <div class="bg-white p-4 rounded-xl shadow-md">
+                    <h3 class="text-base font-semibold mb-4">学习记录</h3>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <p class="text-3xl font-bold text-blue-600" id="stats-streak">0</p>
+                            <p class="text-sm text-gray-500">连续学习天数</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-green-600" id="stats-total-learned">0</p>
+                            <p class="text-sm text-gray-500">累计学习词语</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- ══════════════ 设置页面 ══════════════ -->
+        <div id="settings-page" class="page hidden">
+            <header class="bg-blue-900 text-white p-4">
+                <h1 class="text-2xl font-bold text-center">设置</h1>
+            </header>
+            <main class="p-4">
+                <!-- 外观 -->
+                <div class="bg-white p-4 rounded-xl shadow-md mb-4">
+                    <h3 class="text-base font-semibold mb-4">外观设置</h3>
+                    <div class="flex items-center justify-between">
+                        <span>深色模式</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="dark-mode-toggle" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer
+                                peer-checked:after:translate-x-full peer-checked:after:border-white
+                                after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                                after:bg-white after:border-gray-300 after:border after:rounded-full
+                                after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 每日新词 -->
+                <div class="bg-white p-4 rounded-xl shadow-md mb-4">
+                    <h3 class="text-base font-semibold mb-1">每日新词数量</h3>
+                    <p class="text-sm text-gray-400 mb-3" id="daily-words-display">当前：20 词</p>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button class="daily-words-btn p-2 border rounded-lg text-sm hover:bg-blue-50 transition-colors" data-count="10">10</button>
+                        <button class="daily-words-btn p-2 border rounded-lg text-sm hover:bg-blue-50 transition-colors" data-count="20">20</button>
+                        <button class="daily-words-btn p-2 border rounded-lg text-sm hover:bg-blue-50 transition-colors" data-count="30">30</button>
+                        <button class="daily-words-btn p-2 border rounded-lg text-sm hover:bg-blue-50 transition-colors" data-count="50">50</button>
+                    </div>
+                </div>
+
+                <!-- 数据管理 -->
+                <div class="bg-white p-4 rounded-xl shadow-md mb-4">
+                    <h3 class="text-base font-semibold mb-3">数据管理</h3>
+                    <div class="space-y-2">
+                        <button id="export-data" class="w-full p-3 border border-gray-300 rounded-xl text-sm hover:bg-gray-50 transition-colors text-left">
+                            📤 导出学习进度
+                        </button>
+                        <button id="import-data" class="w-full p-3 border border-gray-300 rounded-xl text-sm hover:bg-gray-50 transition-colors text-left">
+                            📥 导入学习进度
+                        </button>
+                        <button id="reset-data" class="w-full p-3 border border-red-200 rounded-xl text-sm hover:bg-red-50 transition-colors text-red-600 text-left">
+                            🗑 重置所有进度
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 关于 -->
+                <div class="bg-white p-4 rounded-xl shadow-md">
+                    <h3 class="text-base font-semibold mb-3">关于</h3>
+                    <div class="space-y-1 text-sm text-gray-600">
+                        <p class="font-semibold text-gray-800">公考词语记忆卡</p>
+                        <p>版本：1.0.0</p>
+                        <p>基于艾宾浩斯间隔重复算法</p>
+                        <p>支持离线使用（PWA）</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+    </div><!-- /#app -->
+
+    <!-- ✅ 修复3：底部导航固定在底部 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40"
+         style="padding-bottom: env(safe-area-inset-bottom);">
+        <div class="flex justify-around">
+            <button data-page="home" class="nav-btn flex flex-col items-center py-2 px-4 text-blue-600">
+                <span class="text-xl">🏠</span>
+                <span class="text-xs mt-0.5">首页</span>
+            </button>
+            <button data-page="vocabulary" class="nav-btn flex flex-col items-center py-2 px-4 text-gray-400">
+                <span class="text-xl">📚</span>
+                <span class="text-xs mt-0.5">词库</span>
+            </button>
+            <button data-page="stats" class="nav-btn flex flex-col items-center py-2 px-4 text-gray-400">
+                <span class="text-xl">📊</span>
+                <span class="text-xs mt-0.5">统计</span>
+            </button>
+            <button data-page="settings" class="nav-btn flex flex-col items-center py-2 px-4 text-gray-400">
+                <span class="text-xl">⚙️</span>
+                <span class="text-xs mt-0.5">设置</span>
+            </button>
+        </div>
+    </nav>
+    <script src="js/words-data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

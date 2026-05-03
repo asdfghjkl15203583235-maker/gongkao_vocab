@@ -1,0 +1,324 @@
+/* 自定义样式补充 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    touch-action: manipulation; /* 优化触摸体验 */
+}
+
+.page {
+    transition: opacity 0.3s ease;
+}
+
+.nav-btn {
+    transition: color 0.2s ease;
+    touch-action: manipulation; /* 优化触摸体验 */
+}
+
+.nav-btn:hover {
+    transform: scale(1.1);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .card {
+        height: 300px; /* 调整卡片高度 */
+    }
+
+    .card-front h2 {
+        font-size: 1.5rem; /* 调整字体大小 */
+    }
+
+    .card-front p {
+        font-size: 1rem;
+    }
+
+    /* 确保底部导航栏正确固定 */
+    nav {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 1000 !important;
+        height: 60px !important;
+        background-color: white !important;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* 主内容区域留出底部导航栏空间 */
+    #app {
+        padding-bottom: 70px !important;
+        min-height: calc(100vh - 70px) !important;
+    }
+
+    /* 确保页面内容不被导航栏遮挡 */
+    .page {
+        min-height: calc(100vh - 70px) !important;
+    }
+
+    /* 调整header高度 */
+    header {
+        height: auto !important;
+    }
+
+    /* 优化触摸按钮大小 */
+    .nav-btn {
+        min-height: 60px !important;
+        min-width: 60px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 1 !important;
+        touch-action: manipulation !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+
+    /* 确保文字不会太小 */
+    .nav-btn span {
+        font-size: 10px !important;
+    }
+
+    /* 确保卡片按钮在移动端可点击 */
+    .card button {
+        min-height: 44px !important;
+        touch-action: manipulation !important;
+    }
+}
+
+/* 确保body高度正确 */
+html, body {
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+}
+
+/* 触摸优化 */
+button, a, input, select, textarea {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* 防止 iOS 弹出菜单 */
+input, select, textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* 移动端点击反馈优化 */
+@media (hover: none) {
+    button:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+    }
+
+    .nav-btn:active {
+        background-color: rgba(59, 130, 246, 0.1);
+    }
+}
+
+/* 确保移动端页面不会超出视口 */
+@media (max-width: 768px) {
+    body {
+        overscroll-behavior-y: none;
+    }
+
+    /* 防止页面滚动时出现空白 */
+    html, body {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* 主容器滚动 */
+    #app {
+        position: relative;
+        height: calc(100vh - 70px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* 卡片样式 */
+.card {
+    perspective: 1000px;
+    width: 100%;
+    height: 400px;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--card-bg);
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}
+
+/* 页面切换动画 */
+.page {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.page.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 按钮交互效果 */
+button {
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 加载动画 */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 滑动卡片效果 */
+.card-slide-in {
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* 弹出提示动画 */
+.popup {
+    animation: popup 0.3s ease;
+}
+
+@keyframes popup {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+:root {
+    --bg-primary: #f9fafb;
+    --bg-secondary: #ffffff;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --card-bg: #ffffff;
+    --header-bg: #1e40af;
+}
+
+[data-theme="dark"] {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --border-color: #4d4d4d;
+    --card-bg: #2d2d2d;
+    --header-bg: #1e3a8a;
+}
+
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .bg-gray-50 {
+    background-color: var(--bg-primary);
+}
+
+[data-theme="dark"] .bg-gray-100 {
+    background-color: var(--bg-secondary);
+}
+
+[data-theme="dark"] .bg-gray-200 {
+    background-color: #3d3d3d;
+}
+
+[data-theme="dark"] .text-gray-600 {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .text-gray-800 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .border {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .bg-blue-900 {
+    background-color: var(--header-bg);
+}
+
+[data-theme="dark"] .text-white {
+    color: var(--text-primary);
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+    <rect width="192" height="192" fill="#1e40af" rx="24"/>
+    <rect x="24" y="36" width="144" height="120" fill="white" rx="8"/>
+    <rect x="36" y="48" width="120" height="96" fill="#f3f4f6" rx="4"/>
+    <text x="96" y="108" font-family="Arial, sans-serif" font-size="48" text-anchor="middle" fill="#1e40af">📖</text>
+    <text x="96" y="140" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#1e40af">公考</text>
+</svg>
